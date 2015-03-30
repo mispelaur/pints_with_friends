@@ -2,6 +2,11 @@ console.log("hello, lauren. you're liked to map_initialize.js");
 
 var map;
 
+function setCenterNoGeoloc() {
+  var nosupportpos = new google.maps.LatLng(51.512802, -0.091324);                     
+  map.setCenter(nosupportpos);
+};
+
 function initialize() {
 
   var mapOptions = {
@@ -18,15 +23,14 @@ function initialize() {
       var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       map.setCenter(pos);
     }, function() {
-      // Browser support Geolocation, but latlng unavailable
-      console.log("broswer supports geolocation, but it's turned off")
+      // browser supports geolocation, but latlng unavailable
+      console.log("broswer supports geolocation, but it's turned off, defaulting center to London")
       setCenterNoGeoloc();
     });
   } else {
-    // Browser doesn't support Geolocation
-    console.log("broswer doesn't support geolocation");
-    var nosupportpos = new google.maps.LatLng(51.512802, -0.091324);                     
-    map.setCenter(nosupportpos);
+    // browser doesn't support geolocation
+    console.log("broswer doesn't support geolocation, defaulting center to London");
+    setCenterNoGeoloc();
   }
 
 }
