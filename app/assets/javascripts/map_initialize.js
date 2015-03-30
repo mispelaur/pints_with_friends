@@ -123,9 +123,17 @@ function initialize() {
     })
   })
 
-  $('#calculate').click(function () {
+  $('#calculate').click(function(){
+    //call addMarker function to add any pre-button-click input from user
+    $.each(locations, function(index, location){
+      if(location.value !==""){
+        addMarker(map, location.value, index, markers);
+      };
+    });
+
+
     //have access to populate markers objet in here,yay!
-    console.log('clicked');
+    // console.log('clicked');
   });
   
 
