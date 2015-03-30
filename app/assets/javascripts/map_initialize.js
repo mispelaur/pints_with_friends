@@ -3,7 +3,7 @@ console.log("hello, lauren. you're liked to map_initialize.js");
 var map;
 //collect all the location inputs into an array
 var locations = document.getElementsByClassName('location');
-var transitTypes = document.getElementsByClassName('transit-type');
+var transitInputs = document.getElementsByClassName('transit-type');
 
 function setCenterNoGeoloc() {
   var nosupportpos = new google.maps.LatLng(51.512802, -0.091324);                     
@@ -66,6 +66,8 @@ function addMarker(map, inputAddress, locationNumber, markers) {
   }
 }
 
+
+
 function initialize() {
 
   var mapOptions = {
@@ -111,13 +113,21 @@ function initialize() {
     });
   });  
 
-  $.each(transitTypes, function(index, transitType){
+  var modesOfTransit = {0:{}, 1:{}};
+
+  $.each(transitInputs, function(index, transitType){
     google.maps.event.addDomListener(transitType, 'change', function(event){
       var selected = $(this).find('option:selected');
       var modeOfTransit = selected.data('transit'); 
       console.log(modeOfTransit);
     })
   })
+
+  $('#calculate').click(function () {
+    //have access to populate markers objet in here,yay!
+    console.log('clicked');
+  });
+  
 
 }
 
