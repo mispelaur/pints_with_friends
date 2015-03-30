@@ -3,7 +3,7 @@ console.log("hello, lauren. you're liked to map_initialize.js");
 var map;
 //collect all the location inputs into an array
 var locations = document.getElementsByClassName('location');
-
+var transitTypes = document.getElementsByClassName('transit-type');
 
 function setCenterNoGeoloc() {
   var nosupportpos = new google.maps.LatLng(51.512802, -0.091324);                     
@@ -12,7 +12,6 @@ function setCenterNoGeoloc() {
 
 function addMarker(map, inputAddress, locationNumber, markers) {
   console.log('inside addMarker function');
-  debugger;
   if(/* inputAddress === undefined || */inputAddress !== markers[locationNumber][1]){
     // console.log("input address is (undefined?): " + inputAddress);
     console.log(inputAddress + " different to: " + markers[locationNumber][1]);
@@ -111,6 +110,14 @@ function initialize() {
       };
     });
   });  
+
+  $.each(transitTypes, function(index, transitType){
+    google.maps.event.addDomListener(transitType, 'change', function(event){
+      var selected = $(this).find('option:selected');
+      var modeOfTransit = selected.data('transit'); 
+      console.log(modeOfTransit);
+    })
+  })
 
 }
 
