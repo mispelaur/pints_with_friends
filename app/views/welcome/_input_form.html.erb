@@ -1,1 +1,25 @@
-<h1>I am in the partial _input_form</h1>
+<div class="two-locations-form">
+  <form>
+    <input class="location" id="first-location" type="text" placeholder="location 1" data-id="0">
+    <select class="transit-type">
+      <option value="bike">Bike</option>
+      <option value="transit" selected>Transit</option>
+      <option value="drive">Drive</option>
+      <option value="walk">Walk</option>
+    </select>
+    <input class="location" id="second-location" type="text" placeholder="location 2" data-id="1">
+    <select class="transit-type">
+      <option value="bike">Bike</option>
+      <option value="transit" selected>Transit</option>
+      <option value="drive">Drive</option>
+      <option value="walk">Walk</option>
+    </select>
+    <p><input type="checkbox" checked>Pub</p>
+    <p><input type="checkbox">Cafe</p>
+    <p><input type="checkbox">Restaurant</p>
+    <p><input type="checkbox">Cocktail bar</p>
+    <p><input type="checkbox">Movie Theater</p>
+    <input id="meetup-date-time" name="meetup-date-time" type="datetime-local">
+    <button type="button" onclick="calculateDistances(markers);">Calculate</button>
+  </form>
+</div>

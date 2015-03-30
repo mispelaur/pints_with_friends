@@ -7,3 +7,14 @@
   background-color: #eee;
   z-index: -100;
 }
+
+.two-locations-form {
+  margin-left: 100px;
+  margin-top: 40px;
+  padding: 20px;
+  width: 250px;
+  height: 450px;
+  float: left;
+  border: solid;
+  z-index: -90;
+}

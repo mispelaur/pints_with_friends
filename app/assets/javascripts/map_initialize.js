@@ -1,6 +1,8 @@
 console.log("hello, lauren. you're liked to map_initialize.js");
 
 var map;
+//collect all the location inputs into an array
+var locations = document.getElementsByClassName('location');
 
 function setCenterNoGeoloc() {
   var nosupportpos = new google.maps.LatLng(51.512802, -0.091324);                     
@@ -32,6 +34,13 @@ function initialize() {
     console.log("broswer doesn't support geolocation, defaulting center to London");
     setCenterNoGeoloc();
   }
+
+  $.each(locations, function(index, location){
+    google.maps.event.addDomListener(location, 'focusout', function(event){
+      console.log('focused out of location: ' + index);
+      var input = $(this).val();
+    });
+  });  
 
 }
 
