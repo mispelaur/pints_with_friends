@@ -115,14 +115,6 @@ function initialize() {
 
   var modesOfTransit = {0:{}, 1:{}};
 
-  $.each(transitInputs, function(index, transitType){
-    google.maps.event.addDomListener(transitType, 'change', function(event){
-      var selected = $(this).find('option:selected');
-      var modeOfTransit = selected.data('transit'); 
-      console.log(modeOfTransit);
-    })
-  })
-
   $('#calculate').click(function(){
     //call addMarker function to add any pre-button-click input from user
     $.each(locations, function(index, location){
@@ -131,8 +123,16 @@ function initialize() {
       };
     });
 
+    //collect mode of transit from user input
+    $.each(transitInputs, function(index, transitType){
+      var modeOfTransit = $(transitType.selectedOptions).data('transit')
+      modesOfTransit[index] = modeOfTransit;
+    })
 
-    //have access to populate markers objet in here,yay!
+    // console.log(modesOfTransit);
+
+
+    //have access to populate markers objet in here, yay!
     // console.log('clicked');
   });
   
