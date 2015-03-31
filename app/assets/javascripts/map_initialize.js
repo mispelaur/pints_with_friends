@@ -140,7 +140,34 @@ function getStartPointForPlaceQuery(markers, travelTimes){
   var startPointForPlaceQuery = google.maps.geometry.spherical.interpolate(markers[0][0].Lf.Ba, markers[1][0].Lf.Ba, distOfTotalFromLocationOne);
 
   // console.log(startPointForPlaceQuery);
-  returnPlaces(startPointForPlaceQuery);
+  collectDestinations(startPointForPlaceQuery, markers);
+}
+
+function collectDestinations(startPoint, markers){
+  // debugger;
+  //must think about how to 
+  var request = {
+    location: startPoint,
+    radius: 250,
+    types: ['bar']
+  };
+    // infowindow = new google.maps.InfoWindow();
+  var service = new google.maps.places.PlacesService(map);
+  // service.nearbySearch(request, destinationsCallback);
+  service.nearbySearch(request, function(results, status) {
+    destinationsCallback(results, status, markers);
+  });
+
+}
+
+function destinationsCallback(results, status, markers) {
+  //results is the google name for the returned list of places
+
+  if (status == google.maps.places.PlacesServiceStatus.OK) {
+
+    //do some stuff
+
+  }
 }
 
 
