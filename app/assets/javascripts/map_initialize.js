@@ -192,10 +192,6 @@ function destinationsCallback(results, status, markers) {
         });
     });
 
-  // at this point in the code I can console.log(travelTimesObject), but I can't access its data or pass it usefully to another function.
-  // console.log(travelTimesObject);
-  // rankPlacesByTravelTimeFairness(travelTimesObject, results);
-
   }
 }
 
@@ -207,15 +203,27 @@ function travelTimesBuilderCallback(response, status, originLocationNumber, plac
     // travelTimesObject[originLocationNumber][placeIndex + " " + name] = seconds;
     travelTimesObject[originLocationNumber][placeIndex] = seconds;
   }
-
   //if this function has been called for the last time, rank the placed by computing the sum of squares
   if (Object.keys(travelTimesObject[0]).length === results.length && Object.keys(travelTimesObject[1]).length === results.length){
-    debugger;
-
-    // rankPlacesByTravelTimeFairness(travelTimesObject, results);
+    rankPlacesByTravelTimeFairness(travelTimesObject, results);
   }
+}
 
-  // return travelTimesObject;
+function rankPlacesByTravelTimeFairness(travelTimesObject, results){
+  // taking the sum of the squares of each place - will take into account both the absolute times and the distribution of times
+  console.log("Time to rank places by travel-time fairness.")
+  var sumSquares = {};
+  Object.keys(travelTimesObject[0]).forEach(function(key) {
+    var a = travelTimesObject[0][key]*travelTimesObject[0][key];
+    var b = travelTimesObject[1][key]*travelTimesObject[1][key];
+    sumSquares[key] = a+b;
+  });
+  //sort ascending by values = ranking places shortest total travel time and fairness
+  rankedDestinations = Object.keys(sumSquares).sort(function(a,b){
+    return sumSquares[a]-sumSquares[b];
+  });
+  console.log(rankedDestinations);
+  // addResultsMarkers(rankedDestinations, results);
 }
 
 
