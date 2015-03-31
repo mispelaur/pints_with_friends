@@ -67,6 +67,7 @@ function addMarker(map, inputAddress, locationNumber, markers) {
 }
 
 function calculateDistances(markers, modesOfTransit) {
+
   var travelTimes = {};
   var locationOne = markers[0][1];
   var locationTwo = markers[1][1];
@@ -113,13 +114,18 @@ function callback(response, status, originLocationNumber, travelTimes, markers) 
 }
 
 function getStartPointForPlaceQuery(markers, travelTimes){
-
   //bisection algorithm to determine approx how long two people traveling towards each other would take to meet
-  //probably doesn't need to iterate 100 times - will look into this later
-  var x = travelTimes[0];
-  var y = travelTimes[1];
+  //probably doesn't need to iterate 10000 times - will look into this later
 
-  var array = new Array(100);
+  if(travelTimes[0] > travelTimes[1]){
+    var x = travelTimes[0];
+    var y = travelTimes[1];
+  } else {
+    var x = travelTimes[1];
+    var y = travelTimes[0];
+  }
+
+  var array = new Array(10000);
 
   $.each(array, function(index, t){
     if(index === 0){
@@ -130,13 +136,13 @@ function getStartPointForPlaceQuery(markers, travelTimes){
     }
   });
 
-  var timeToMiddle = array[99];
+  var timeToMiddle = array[9999];
   var distOfTotalFromLocationOne = timeToMiddle/x
 
-  console.log(timeToMiddle);
-  console.log(distOfTotalFromLocationOne);
+  console.log("time to middle is: " + timeToMiddle);
+  console.log("dist of total from location one, must be less than 1: " + distOfTotalFromLocationOne);
 
-
+  // debugger;
   var startPointForPlaceQuery = google.maps.geometry.spherical.interpolate(markers[0][0].Lf.Ba, markers[1][0].Lf.Ba, distOfTotalFromLocationOne);
 
   // console.log(startPointForPlaceQuery);
