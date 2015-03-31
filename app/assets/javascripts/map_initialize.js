@@ -66,6 +66,82 @@ function addMarker(map, inputAddress, locationNumber, markers) {
   }
 }
 
+function calculateDistances(markers, modesOfTransit) {
+  var travelTimes = {};
+  var locationOne = markers[0][1];
+  var locationTwo = markers[1][1];
+  var service = new google.maps.DistanceMatrixService();
+  service.getDistanceMatrix(
+    {
+      origins: [locationOne],
+      destinations: [locationTwo],
+      travelMode: google.maps.TravelMode[modesOfTransit[0]],
+      unitSystem: google.maps.UnitSystem.METRIC,
+    }, function(response, status) {
+      callback(response, status, 0, travelTimes, markers)
+    });
+  
+  service.getDistanceMatrix(
+    {
+      origins: [locationTwo],
+      destinations: [locationOne],
+      travelMode: google.maps.TravelMode[modesOfTransit[1]],
+      unitSystem: google.maps.UnitSystem.METRIC,
+    }, function(response, status) {
+      callback(response, status, 1, travelTimes, markers)
+    });
+
+  // getStartPointForPlaceQuery(markers);
+
+}
+
+function callback(response, status, originLocationNumber, travelTimes, markers) {
+  if (status != google.maps.DistanceMatrixStatus.OK) {
+    console.log("couldn't calculate distance")
+  } else {
+    
+    var seconds = response.rows[0].elements[0].duration.value;
+    // console.log(seconds);
+    travelTimes[originLocationNumber] = seconds;
+
+  }
+
+  if(travelTimes[0] && travelTimes[1]){
+    getStartPointForPlaceQuery(markers, travelTimes);
+    console.log(travelTimes);
+  }
+}
+
+function getStartPointForPlaceQuery(markers, travelTimes){
+
+  //bisection algorithm to determine approx how long two people traveling towards each other would take to meet
+  //probably doesn't need to iterate 100 times - will look into this later
+  var x = travelTimes[0];
+  var y = travelTimes[1];
+
+  var array = new Array(100);
+
+  $.each(array, function(index, t){
+    if(index === 0){
+      var k = ((y*(x-y))/x);
+      array[0] = k;
+    } else {
+      array[index] = ((y*(x-array[index-1]))/x);
+    }
+  });
+
+  var timeToMiddle = array[99];
+  var distOfTotalFromLocationOne = timeToMiddle/x
+
+  console.log(timeToMiddle);
+  console.log(distOfTotalFromLocationOne);
+
+
+  var startPointForPlaceQuery = google.maps.geometry.spherical.interpolate(markers[0][0].Lf.Ba, markers[1][0].Lf.Ba, distOfTotalFromLocationOne);
+
+  // console.log(startPointForPlaceQuery);
+  returnPlaces(startPointForPlaceQuery);
+}
 
 
 function initialize() {
@@ -113,6 +189,7 @@ function initialize() {
     });
   });  
 
+  //create this dynamically based on number of locations?
   var modesOfTransit = {0:{}, 1:{}};
 
   $('#calculate').click(function(){
@@ -130,10 +207,8 @@ function initialize() {
     })
 
     // console.log(modesOfTransit);
-
-
-    //have access to populate markers objet in here, yay!
-    // console.log('clicked');
+    //have access to populate markers and modesOfTransit objets in here, yay!
+    calculateDistances(markers, modesOfTransit);
   });
   
 
