@@ -97,6 +97,7 @@ function calculateDistances(markers, modesOfTransit) {
 }
 
 function callback(response, status, originLocationNumber, travelTimes, markers) {
+
   if (status != google.maps.DistanceMatrixStatus.OK) {
     console.log("couldn't calculate distance")
   } else {
@@ -139,10 +140,6 @@ function getStartPointForPlaceQuery(markers, travelTimes){
   var timeToMiddle = array[9999];
   var distOfTotalFromLocationOne = timeToMiddle/x
 
-  console.log("time to middle is: " + timeToMiddle);
-  console.log("dist of total from location one, must be less than 1: " + distOfTotalFromLocationOne);
-
-  // debugger;
   var startPointForPlaceQuery = google.maps.geometry.spherical.interpolate(markers[0][0].Lf.Ba, markers[1][0].Lf.Ba, distOfTotalFromLocationOne);
 
   // console.log(startPointForPlaceQuery);
@@ -150,17 +147,20 @@ function getStartPointForPlaceQuery(markers, travelTimes){
 }
 
 function collectDestinations(startPoint, markers){
-  // debugger;
-  //must think about how to 
+  //must think about how to get this to keep finding places until returns 20?
   var request = {
     location: startPoint,
-    radius: 250,
+    radius: 1000,
     types: ['bar']
   };
-    // infowindow = new google.maps.InfoWindow();
   var service = new google.maps.places.PlacesService(map);
-  // service.nearbySearch(request, destinationsCallback);
+  // service.radarSearch(request, function(results, status){
+  //   debugger;
+  //   destinationsCallback(results, status, markers);
+
+  // })
   service.nearbySearch(request, function(results, status) {
+    debugger;
     destinationsCallback(results, status, markers);
   });
 
