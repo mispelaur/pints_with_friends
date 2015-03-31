@@ -165,9 +165,57 @@ function destinationsCallback(results, status, markers) {
 
   if (status == google.maps.places.PlacesServiceStatus.OK) {
 
-    //do some stuff
+    var a = markers[0][1];
+    var b = markers[1][1];
+    var travelTimesObject = {0:{}, 1:{}};
+
+    $.each(results, function(i, result) {
+      var service = new google.maps.DistanceMatrixService();
+      service.getDistanceMatrix(
+        {
+          origins: [a],
+          destinations: [results[i].geometry.location],
+          travelMode: google.maps.TravelMode.TRANSIT,
+          unitSystem: google.maps.UnitSystem.METRIC,
+        }, function(response, status) {     
+          travelTimesBuilderCallback(response, status, 0, i, results[i].name, results.length, travelTimesObject, results);
+        });
+
+      service.getDistanceMatrix(
+        {
+          origins: [b],
+          destinations: [results[i].geometry.location],
+          travelMode: google.maps.TravelMode.DRIVING,
+          unitSystem: google.maps.UnitSystem.METRIC,
+        }, function(response, status) {
+          travelTimesBuilderCallback(response, status, 1, i, results[i].name, results.length, travelTimesObject, results);
+        });
+    });
+
+  // at this point in the code I can console.log(travelTimesObject), but I can't access its data or pass it usefully to another function.
+  // console.log(travelTimesObject);
+  // rankPlacesByTravelTimeFairness(travelTimesObject, results);
 
   }
+}
+
+function travelTimesBuilderCallback(response, status, originLocationNumber, placeIndex, name, numberOfPlaces, travelTimesObject, results) {
+  if (status != google.maps.DistanceMatrixStatus.OK) {
+    console.log("couldn't calculate distance")
+  } else {
+    var seconds = response.rows[0].elements[0].duration.value;
+    // travelTimesObject[originLocationNumber][placeIndex + " " + name] = seconds;
+    travelTimesObject[originLocationNumber][placeIndex] = seconds;
+  }
+
+  //if this function has been called for the last time, rank the placed by computing the sum of squares
+  if (Object.keys(travelTimesObject[0]).length === results.length && Object.keys(travelTimesObject[1]).length === results.length){
+    debugger;
+
+    // rankPlacesByTravelTimeFairness(travelTimesObject, results);
+  }
+
+  // return travelTimesObject;
 }
 
 
