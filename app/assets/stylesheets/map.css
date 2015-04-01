@@ -10,13 +10,17 @@
 
 .two-locations-form {
   margin-left: 100px;
-  margin-top: 40px;
-  padding: 20px;
+  /*margin-top: 40px;*/
+  /*padding: 20px;*/
+  /*padding: 10% 0;*/
+  margin-top: 55px;
+  margin-left: 90px;
   width: 250px;
   height: 450px;
   float: left;
   border: solid;
   z-index: 110;
+  pointer-events: auto; 
 }
 
 .left-div {
@@ -28,7 +32,7 @@
     width: 32%;
     background-color: clear;
     z-index: 100;
-    /*pointer-events: none;*/
+    pointer-events: none;
 }
 
 #slide-left {
