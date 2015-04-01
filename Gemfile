@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 # gem 'devise'
 ruby '2.1.4'
 gem 'jquery-ui-rails'
+gem 'jquery-datetimepicker-rails'
 
 #default
 gem 'rails', '4.2.0'

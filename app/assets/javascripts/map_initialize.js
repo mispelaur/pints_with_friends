@@ -5,7 +5,9 @@ var map;
 var locations = document.getElementsByClassName('location');
 var transitInputs = document.getElementsByClassName('transit-type');
 var destinationInputTypes = document.getElementsByClassName('destination-type');
-var dateTimeInput = document.getElementById('meetup-date-time');
+// var dateTime = jQuery('#datetimepicker');
+// $('#datetimepicker').val() = "2015-04-22 21:33:41"
+
 
 function setCenterNoGeoloc() {
   var nosupportpos = new google.maps.LatLng(51.512802, -0.091324);                     
@@ -71,13 +73,15 @@ function addMarker(map, inputAddress, locationNumber, markers) {
 }
 
 function calculateDistances(markers, modesOfTransit, destinationTypes) {
-  // debugger;
+  debugger;
 
-  // var dateTime = document.getElementById('meetup-date-time').value;
-  // "2015-04-09T19:00"
+  var dateTime = jQuery('#datetimepicker').val();
 
-  // var dateTime = new Date('April 7, 2015 19:30:00');
-  // var birthday = new Date(1995, 11, 17, 3, 24, 0);
+  if(dateTime == ""){
+    var formattedDateTime = new Date();
+  } else {
+    var formattedDateTime = new Date(dateTime);
+  }
 
   var travelTimes = {};
   var locationOne = markers[0][1];
@@ -89,7 +93,7 @@ function calculateDistances(markers, modesOfTransit, destinationTypes) {
       destinations: [locationTwo],
       travelMode: google.maps.TravelMode[modesOfTransit[0]],
       unitSystem: google.maps.UnitSystem.METRIC,
-      // transitOptions: {arrivalTime: dateTime}
+      transitOptions: {arrivalTime: formattedDateTime}
     }, function(response, status) {
       callback(response, status, 0, travelTimes, markers, modesOfTransit, destinationTypes)
     });
@@ -100,7 +104,7 @@ function calculateDistances(markers, modesOfTransit, destinationTypes) {
       destinations: [locationOne],
       travelMode: google.maps.TravelMode[modesOfTransit[1]],
       unitSystem: google.maps.UnitSystem.METRIC,
-      // transitOptions: {arrivalTime: dateTime}
+      transitOptions: {arrivalTime: formattedDateTime}
     }, function(response, status) {
       callback(response, status, 1, travelTimes, markers, modesOfTransit, destinationTypes)
     });
@@ -318,6 +322,11 @@ function initialize() {
   map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
 
+  jQuery('#datetimepicker').datetimepicker({
+    formatTime:'H:i',
+    defaultDate: new Date()
+  });
+
   //gets browser geolocation and sets it to center of the map
   if(navigator.geolocation) {
     console.log("broswer supports geolocation, centering map on user");
@@ -382,7 +391,7 @@ function initialize() {
         destinationTypes.push(destinationType.id);
       }
     })
-    debugger;
+    // debugger;
 
     addMarkerPromise.then(function(result){
       console.log("inside addMarkerPromise");
@@ -400,7 +409,7 @@ function initialize() {
     // })
 
     addMarkerPromise.then(function(result){
-      debugger;
+      // debugger;
     })
     // debugger;
     calculateDistances(markers, modesOfTransit, destinationTypes);
@@ -411,6 +420,8 @@ function initialize() {
     console.log('sliide')
       $('#slide-left').toggle('slide', {direction: 'right'}, 2000);
   });
+
+  
 
 }
 

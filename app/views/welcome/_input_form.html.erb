@@ -1,13 +1,13 @@
 <div class="left-div">
   <form class="two-locations-form">
-    <input class="location" id="first-location" type="text" placeholder="location 1" data-id="0">
+    <input class="location" id="first-location" type="text" placeholder="your address" data-id="0">
     <select class="transit-type">
       <option value="bike" data-transit="BICYCLING">Bike</option>
       <option value="transit" data-transit="TRANSIT"selected>Transit</option>
       <option value="drive" data-transit="DRIVING">Drive</option>
       <option value="walk" data-transit="WALKING">Walk</option>
     </select>
-    <input class="location" id="second-location" type="text" placeholder="location 2" data-id="1">
+    <input class="location" id="second-location" type="text" placeholder="friend's address" data-id="1">
     <select class="transit-type">
       <option value="bike" data-transit="BICYCLING">Bike</option>
       <option value="transit" data-transit="TRANSIT"selected>Transit</option>
@@ -19,10 +19,11 @@
     <p><input type="checkbox" class="destination-type" id="cafe"> cafe</p>
     <p><input type="checkbox" class="destination-type" id="movie_theater"> movie theater</p>
     <p><input type="checkbox" class="destination-type" id="restaurant"> restaurant</p>
-    <input id="meetup-date-time" name="meetup-date-time" type="datetime-local">
+    <input class="datetimepicker" id="datetimepicker" type="text" placeholder="click to add date/time">
     <button id="calculate" type="button">Calculate</button>
     <button class="trigger-list-view" id="slide-from-right-button">Run Effect</button>
   </form>
+
 </div>
 
 <div id="outer-slide-left">
