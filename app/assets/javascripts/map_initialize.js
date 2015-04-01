@@ -5,6 +5,7 @@ var map;
 var locations = document.getElementsByClassName('location');
 var transitInputs = document.getElementsByClassName('transit-type');
 var destinationInputTypes = document.getElementsByClassName('destination-type');
+var dateTimeInput = document.getElementById('meetup-date-time');
 
 function setCenterNoGeoloc() {
   var nosupportpos = new google.maps.LatLng(51.512802, -0.091324);                     
@@ -12,6 +13,7 @@ function setCenterNoGeoloc() {
 };
 
 function addMarker(map, inputAddress, locationNumber, markers) {
+
   console.log('inside addMarker function');
   if(/* inputAddress === undefined || */inputAddress !== markers[locationNumber][1]){
     // console.log("input address is (undefined?): " + inputAddress);
@@ -62,6 +64,7 @@ function addMarker(map, inputAddress, locationNumber, markers) {
     };
     var geocoderOptions = { address: inputAddress };
     geocoder.geocode(geocoderOptions, showMarkerFromGeocoderResults);
+
   }else{
     console.log("user hasn't changed location input. no new marker needed.")
   }
@@ -70,7 +73,10 @@ function addMarker(map, inputAddress, locationNumber, markers) {
 function calculateDistances(markers, modesOfTransit, destinationTypes) {
   // debugger;
 
-  var dateTime = new Date('April 7, 2015 19:30:00');
+  // var dateTime = document.getElementById('meetup-date-time').value;
+  // "2015-04-09T19:00"
+
+  // var dateTime = new Date('April 7, 2015 19:30:00');
   // var birthday = new Date(1995, 11, 17, 3, 24, 0);
 
   var travelTimes = {};
@@ -83,7 +89,7 @@ function calculateDistances(markers, modesOfTransit, destinationTypes) {
       destinations: [locationTwo],
       travelMode: google.maps.TravelMode[modesOfTransit[0]],
       unitSystem: google.maps.UnitSystem.METRIC,
-      transitOptions: {arrivalTime: dateTime}
+      // transitOptions: {arrivalTime: dateTime}
     }, function(response, status) {
       callback(response, status, 0, travelTimes, markers, modesOfTransit, destinationTypes)
     });
@@ -94,7 +100,7 @@ function calculateDistances(markers, modesOfTransit, destinationTypes) {
       destinations: [locationOne],
       travelMode: google.maps.TravelMode[modesOfTransit[1]],
       unitSystem: google.maps.UnitSystem.METRIC,
-      transitOptions: {arrivalTime: dateTime}
+      // transitOptions: {arrivalTime: dateTime}
     }, function(response, status) {
       callback(response, status, 1, travelTimes, markers, modesOfTransit, destinationTypes)
     });
@@ -248,7 +254,7 @@ function rankPlacesByTravelTimeFairness(travelTimesObject, results){
 
 function addResultsMarkers(rankings, placesObject, travelTimesObject) {
 
-  debugger;
+  // debugger;
 
   console.log('inside addResultsMarkers function');
   //add top 5 choices to the map
@@ -299,7 +305,7 @@ function addResultsMarkers(rankings, placesObject, travelTimesObject) {
 
   }
 
-  // $("#list-view").show();
+  $(".trigger-list-view").show();
 }
 
 
@@ -354,6 +360,7 @@ function initialize() {
 
   $('#calculate').click(function(){
     //call addMarker function to add any pre-button-click input from user
+    // var dateTime = document.getElementById('meetup-date-time').value;
 
     var addMarkerPromise = new Promise(function(resolve, reject){
       $.each(locations, function(index, location){
@@ -361,7 +368,7 @@ function initialize() {
           addMarker(map, location.value, index, markers);
         };
       });
-      resolve (markers);
+      resolve(markers);
     });
 
     //collect mode of transit from user input
@@ -375,6 +382,7 @@ function initialize() {
         destinationTypes.push(destinationType.id);
       }
     })
+    debugger;
 
     addMarkerPromise.then(function(result){
       console.log("inside addMarkerPromise");
@@ -391,9 +399,9 @@ function initialize() {
       // calculateDistances(result, secondargument);
     // })
 
-    // addMarkerPromise.then(function(result){
-    //   debugger;
-    // })
+    addMarkerPromise.then(function(result){
+      debugger;
+    })
     // debugger;
     calculateDistances(markers, modesOfTransit, destinationTypes);
   });

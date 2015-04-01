@@ -32,8 +32,8 @@
 }
 
 #slide-left {
-    background-color:#eee;
-    /*border:2px solid #333;*/
+    /*background-color:#eee;*/
+    background:rgba(255,255,255, 0.7);
     /*height: 400px;*/
     height:100%; 
     width:100%;
@@ -58,4 +58,8 @@
     /*background-color: clear;*/
     z-index: -100;
     pointer-events: none;
+}
+
+.trigger-list-view{
+  display: none;
 }
