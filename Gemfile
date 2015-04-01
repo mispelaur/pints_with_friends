@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 #added
 # gem 'devise'
 ruby '2.1.4'
+gem 'jquery-ui-rails'
 
 #default
 gem 'rails', '4.2.0'

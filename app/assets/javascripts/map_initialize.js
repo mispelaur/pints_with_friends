@@ -4,6 +4,7 @@ var map;
 //collect all the location inputs into an array
 var locations = document.getElementsByClassName('location');
 var transitInputs = document.getElementsByClassName('transit-type');
+var destinationInputTypes = document.getElementsByClassName('destination-type');
 
 function setCenterNoGeoloc() {
   var nosupportpos = new google.maps.LatLng(51.512802, -0.091324);                     
@@ -66,7 +67,11 @@ function addMarker(map, inputAddress, locationNumber, markers) {
   }
 }
 
-function calculateDistances(markers, modesOfTransit) {
+function calculateDistances(markers, modesOfTransit, destinationTypes) {
+  // debugger;
+
+  var dateTime = new Date('April 7, 2015 19:30:00');
+  // var birthday = new Date(1995, 11, 17, 3, 24, 0);
 
   var travelTimes = {};
   var locationOne = markers[0][1];
@@ -78,8 +83,9 @@ function calculateDistances(markers, modesOfTransit) {
       destinations: [locationTwo],
       travelMode: google.maps.TravelMode[modesOfTransit[0]],
       unitSystem: google.maps.UnitSystem.METRIC,
+      transitOptions: {arrivalTime: dateTime}
     }, function(response, status) {
-      callback(response, status, 0, travelTimes, markers)
+      callback(response, status, 0, travelTimes, markers, modesOfTransit, destinationTypes)
     });
   
   service.getDistanceMatrix(
@@ -88,15 +94,16 @@ function calculateDistances(markers, modesOfTransit) {
       destinations: [locationOne],
       travelMode: google.maps.TravelMode[modesOfTransit[1]],
       unitSystem: google.maps.UnitSystem.METRIC,
+      transitOptions: {arrivalTime: dateTime}
     }, function(response, status) {
-      callback(response, status, 1, travelTimes, markers)
+      callback(response, status, 1, travelTimes, markers, modesOfTransit, destinationTypes)
     });
 
   // getStartPointForPlaceQuery(markers);
 
 }
 
-function callback(response, status, originLocationNumber, travelTimes, markers) {
+function callback(response, status, originLocationNumber, travelTimes, markers, modesOfTransit, destinationTypes) {
 
   if (status != google.maps.DistanceMatrixStatus.OK) {
     console.log("couldn't calculate distance")
@@ -109,12 +116,12 @@ function callback(response, status, originLocationNumber, travelTimes, markers) 
   }
 
   if(travelTimes[0] && travelTimes[1]){
-    getStartPointForPlaceQuery(markers, travelTimes);
+    getStartPointForPlaceQuery(markers, travelTimes, modesOfTransit, destinationTypes);
     console.log(travelTimes);
   }
 }
 
-function getStartPointForPlaceQuery(markers, travelTimes){
+function getStartPointForPlaceQuery(markers, travelTimes, modesOfTransit, destinationTypes){
   //bisection algorithm to determine approx how long two people traveling towards each other would take to meet
   //probably doesn't need to iterate 10000 times - will look into this later
 
@@ -138,20 +145,26 @@ function getStartPointForPlaceQuery(markers, travelTimes){
   });
 
   var timeToMiddle = array[9999];
-  var distOfTotalFromLocationOne = timeToMiddle/x
+
+  if(travelTimes[0] > travelTimes[1]){
+    var distOfTotalFromLocationOne = timeToMiddle/x
+  } else {
+    var distOfTotalFromLocationOne = timeToMiddle/y
+  }
 
   var startPointForPlaceQuery = google.maps.geometry.spherical.interpolate(markers[0][0].Lf.Ba, markers[1][0].Lf.Ba, distOfTotalFromLocationOne);
 
   // console.log(startPointForPlaceQuery);
-  collectDestinations(startPointForPlaceQuery, markers);
+  collectDestinations(startPointForPlaceQuery, markers, modesOfTransit, destinationTypes);
 }
 
-function collectDestinations(startPoint, markers){
+function collectDestinations(startPoint, markers, modesOfTransit, destinationTypes){
   //must think about how to get this to keep finding places until returns 20?
+
   var request = {
     location: startPoint,
     radius: 1000,
-    types: ['bar']
+    types: destinationTypes
   };
   var service = new google.maps.places.PlacesService(map);
   // service.radarSearch(request, function(results, status){
@@ -160,13 +173,13 @@ function collectDestinations(startPoint, markers){
 
   // })
   service.nearbySearch(request, function(results, status) {
-    debugger;
-    destinationsCallback(results, status, markers);
+    // debugger;
+    destinationsCallback(results, status, markers, modesOfTransit);
   });
 
 }
 
-function destinationsCallback(results, status, markers) {
+function destinationsCallback(results, status, markers, modesOfTransit) {
   //results is the google name for the returned list of places
 
   if (status == google.maps.places.PlacesServiceStatus.OK) {
@@ -181,7 +194,7 @@ function destinationsCallback(results, status, markers) {
         {
           origins: [a],
           destinations: [results[i].geometry.location],
-          travelMode: google.maps.TravelMode.TRANSIT,
+          travelMode: google.maps.TravelMode[modesOfTransit[0]],
           unitSystem: google.maps.UnitSystem.METRIC,
         }, function(response, status) {     
           travelTimesBuilderCallback(response, status, 0, i, results[i].name, results.length, travelTimesObject, results);
@@ -191,7 +204,7 @@ function destinationsCallback(results, status, markers) {
         {
           origins: [b],
           destinations: [results[i].geometry.location],
-          travelMode: google.maps.TravelMode.DRIVING,
+          travelMode: google.maps.TravelMode[modesOfTransit[1]],
           unitSystem: google.maps.UnitSystem.METRIC,
         }, function(response, status) {
           travelTimesBuilderCallback(response, status, 1, i, results[i].name, results.length, travelTimesObject, results);
@@ -217,6 +230,7 @@ function travelTimesBuilderCallback(response, status, originLocationNumber, plac
 
 function rankPlacesByTravelTimeFairness(travelTimesObject, results){
   // taking the sum of the squares of each place - will take into account both the absolute times and the distribution of times
+  // debugger;
   console.log("Time to rank places by travel-time fairness.")
   var sumSquares = {};
   Object.keys(travelTimesObject[0]).forEach(function(key) {
@@ -229,7 +243,63 @@ function rankPlacesByTravelTimeFairness(travelTimesObject, results){
     return sumSquares[a]-sumSquares[b];
   });
   console.log(rankedDestinations);
-  // addResultsMarkers(rankedDestinations, results);
+  addResultsMarkers(rankedDestinations, results, travelTimesObject);
+}
+
+function addResultsMarkers(rankings, placesObject, travelTimesObject) {
+
+  debugger;
+
+  console.log('inside addResultsMarkers function');
+  //add top 5 choices to the map
+
+
+  for(i=0; i<5 && i<placesObject.length; i++){
+
+    var colors = ['#ffff00', 'white', 'white', 'white', 'white'];
+    var zIndex = [2000, 1000, 1000, 1000, 1000];
+
+    var choice = parseInt(rankings[i]);
+    var position = placesObject[choice].geometry.location;
+    var title = placesObject[choice].name;
+    var contentstring = '<div id="content">'+
+      '<h1 class="info-window-heading">'+ placesObject[choice].name +'</h1>'+
+      '<div id="info-window-content">'+
+      '<p>' + placesObject[choice].types[0] + '/' + placesObject[choice].types[1] + '</p>' +
+      '<p>' + placesObject[choice].vicinity + '</p>' +
+      '<p>' + placesObject[choice].rating + ' stars from google users!</p>' +
+      '<p>' + Math.round(travelTimesObject[0][choice]/60) + ' minutes from location 1</p>' +
+      '<p>' + Math.round(travelTimesObject[1][choice]/60) + ' minutes from location 2</p>' +
+      '</div>'+
+      '</div>';
+    var infowindow = new google.maps.InfoWindow({
+        content: contentstring
+    });
+    var resultsMarker = new google.maps.Marker({
+      map: map,
+      position: position,
+      animation: google.maps.Animation.DROP,
+      title: title,
+      infowindow: infowindow,
+      zIndex: zIndex[i],
+      icon: {
+            // Star
+            path: 'M 0,-24 6,-7 24,-7 10,4 15,21 0,11 -15,21 -10,4 -24,-7 -6,-7 z',
+            fillColor: colors[i],
+            fillOpacity: 1,
+            scale: 1.5/4,
+            strokeColor: '#bd8d2c',
+            strokeWeight: 1
+          }
+    });
+
+    google.maps.event.addListener(resultsMarker, 'click', function() {
+      this.infowindow.open(map, this);
+    });
+
+  }
+
+  // $("#list-view").show();
 }
 
 
@@ -280,13 +350,18 @@ function initialize() {
 
   //create this dynamically based on number of locations?
   var modesOfTransit = {0:{}, 1:{}};
+  var destinationTypes = []
 
   $('#calculate').click(function(){
     //call addMarker function to add any pre-button-click input from user
-    $.each(locations, function(index, location){
-      if(location.value !==""){
-        addMarker(map, location.value, index, markers);
-      };
+
+    var addMarkerPromise = new Promise(function(resolve, reject){
+      $.each(locations, function(index, location){
+        if(location.value !==""){
+          addMarker(map, location.value, index, markers);
+        };
+      });
+      resolve (markers);
     });
 
     //collect mode of transit from user input
@@ -295,11 +370,39 @@ function initialize() {
       modesOfTransit[index] = modeOfTransit;
     })
 
+    $.each(destinationInputTypes, function(index, destinationType){
+      if(destinationType.checked){
+        destinationTypes.push(destinationType.id);
+      }
+    })
+
+    addMarkerPromise.then(function(result){
+      console.log("inside addMarkerPromise");
+      console.log(result);
+      return result;
+    })
     // console.log(modesOfTransit);
+    // console.log(markers);
     //have access to populate markers and modesOfTransit objets in here, yay!
-    calculateDistances(markers, modesOfTransit);
+    // debugger;
+
+    // Promise.all([addMarkerPromise]).then(function(result){
+      // debugger;
+      // calculateDistances(result, secondargument);
+    // })
+
+    // addMarkerPromise.then(function(result){
+    //   debugger;
+    // })
+    // debugger;
+    calculateDistances(markers, modesOfTransit, destinationTypes);
   });
-  
+
+  $("#slide-from-right-button").click(function (e) {
+    e.preventDefault();
+    console.log('sliide')
+      $('#slide-left').toggle('slide', {direction: 'right'}, 2000);
+  });
 
 }
 
