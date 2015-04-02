@@ -11,16 +11,27 @@
 .two-locations-form {
   margin-left: 100px;
   /*margin-top: 40px;*/
-  /*padding: 20px;*/
-  /*padding: 10% 0;*/
-  margin-top: 55px;
+  padding-top: 0px;
+  padding-right: 12px;
+  padding-left: 12px;
+  padding-bottom: 12px;
+  margin-top: 30px;
   margin-left: 90px;
-  width: 250px;
-  height: 450px;
+  width: 270px;
+  height: 557px;
   float: left;
-  border: solid;
+  border: rgba(255,255,255, 0.7);
   z-index: 110;
   pointer-events: auto; 
+  background:rgba(255,255,255, 0.7);
+}
+.two-locations-form h2 {
+  margin-bottom: 0;
+  margin-top: 10px;
+}
+
+.two-locations-form h4 {
+  margin-top: 0;
 }
 
 .left-div {

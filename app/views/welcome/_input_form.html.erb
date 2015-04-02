@@ -1,29 +1,29 @@
 <div class="left-div">
 
-  <form class="two-locations-form">
-    <h3>Pints with friends</h3>
-    <h5>Input your and a friend's address and travel mode to find conveniently located places to meet. We weight overall travel time and fairness to suggest destinations. The brighter the star the better the match!  </h5>
-    <input class="location" id="first-location" type="text" placeholder="your address" data-id="0">
+  <form class="two-locations-form pure-form">
+    <h2>pints with friends</h2>
+    <h4>input your and a friend's address and travel mode to find conveniently located places to meet. we weigh overall travel time and fairness to suggest destinations. the brighter the star the better the match!</h4>
+    <p><input class="location pure-input-1-2" id="first-location" type="text" placeholder="your address" data-id="0">
     <select class="transit-type">
-      <option value="bike" data-transit="BICYCLING">Bike</option>
-      <option value="transit" data-transit="TRANSIT"selected>Transit</option>
-      <option value="drive" data-transit="DRIVING">Drive</option>
-      <option value="walk" data-transit="WALKING">Walk</option>
-    </select>
-    <input class="location" id="second-location" type="text" placeholder="friend's address" data-id="1">
+      <option value="bike" data-transit="BICYCLING">bike</option>
+      <option value="transit" data-transit="TRANSIT"selected>transit</option>
+      <option value="drive" data-transit="DRIVING">drive</option>
+      <option value="walk" data-transit="WALKING">walk</option>
+    </select></p>
+    <p><input class="location pure-input-1-2" id="second-location" type="text" placeholder="friend's address" data-id="1">
     <select class="transit-type">
-      <option value="bike" data-transit="BICYCLING">Bike</option>
-      <option value="transit" data-transit="TRANSIT"selected>Transit</option>
-      <option value="drive" data-transit="DRIVING">Drive</option>
-      <option value="walk" data-transit="WALKING">Walk</option>
-    </select>
+      <option value="bike" data-transit="BICYCLING">bike</option>
+      <option value="transit" data-transit="TRANSIT"selected>transit</option>
+      <option value="drive" data-transit="DRIVING">drive</option>
+      <option value="walk" data-transit="WALKING">walk</option>
+    </select></p>
+    <p><input class="datetimepicker pure-input-1-2" id="datetimepicker" type="text" placeholder="add date/time"></p>
     <p><input type="checkbox" class="destination-type" id="bakery"> bakery</p>
     <p><input type="checkbox" class="destination-type" id="bar" checked> bar</p>
     <p><input type="checkbox" class="destination-type" id="cafe"> cafe</p>
     <p><input type="checkbox" class="destination-type" id="movie_theater"> movie theater</p>
     <p><input type="checkbox" class="destination-type" id="restaurant"> restaurant</p>
-    <input class="datetimepicker" id="datetimepicker" type="text" placeholder="click to add date/time">
-    <button id="calculate" type="button">Calculate</button>
+    <button class="pure-button" id="calculate" type="button">CALCULATE</button>
     <button class="trigger-list-view" id="slide-from-right-button">Run Effect</button>
   </form>
 

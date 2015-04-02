@@ -1,0 +1,23 @@
+body {
+  font-family: 'PT Sans', sans-serif;
+  color: #332e2e;
+}
+
+.pure-input-1-2 {
+  width: 55%!important;
+  pointer-events: auto; 
+
+}
+
+.pure-button {
+  background-color: white!important;
+  pointer-events: auto; 
+  box-shadow: 3px 3px 2px #888888;
+  color: #332e2e;
+}
+
+.transit-type .destination-type{
+  color: #332e2e;
+  pointer-events: auto!important;
+  z-index: 1000; 
+}
