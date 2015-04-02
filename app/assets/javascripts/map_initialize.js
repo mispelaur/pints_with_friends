@@ -368,7 +368,9 @@ function populateListSlider(rankings, placesObject, travelTimesObject){
 function initialize() {
 
   var mapOptions = {
-    zoom: 13 
+    zoom: 13, 
+
+    styles: [{"featureType":"all","elementType":"all","stylers":[{"saturation":-100},{"gamma":0.5}]},{"featureType":"landscape","elementType":"all","stylers":[{"lightness":"49"},{"gamma":"1.53"},{"weight":"1.00"},{"visibility":"on"}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"on"},{"lightness":"36"},{"gamma":"0.96"}]},{"featureType":"road.arterial","elementType":"all","stylers":[{"lightness":"50"}]},{"featureType":"road.local","elementType":"all","stylers":[{"visibility":"on"}]},{"featureType":"water","elementType":"all","stylers":[{"hue":"#ff0000"}]}]
   };
 
   map = new google.maps.Map(document.getElementById('map-canvas'),
