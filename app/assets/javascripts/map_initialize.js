@@ -73,7 +73,6 @@ function addMarker(map, inputAddress, locationNumber, markers) {
 }
 
 function calculateDistances(markers, modesOfTransit, destinationTypes) {
-  debugger;
 
   var dateTime = jQuery('#datetimepicker').val();
 
@@ -258,16 +257,20 @@ function rankPlacesByTravelTimeFairness(travelTimesObject, results){
 
 function addResultsMarkers(rankings, placesObject, travelTimesObject) {
 
-  // debugger;
+  // for later use
+  // var placeIds = [];
+  // for(i=0; i<10 && i<placesObject.length; i++){
+  //   placeIds.push(placesObject[i].id);
+  // }
 
   console.log('inside addResultsMarkers function');
-  //add top 5 choices to the map
+  //add top 10 choices to the map
 
 
-  for(i=0; i<5 && i<placesObject.length; i++){
+  for(i=0; i<10 && i<placesObject.length; i++){
 
-    var colors = ['#ffff00', 'white', 'white', 'white', 'white'];
-    var zIndex = [2000, 1000, 1000, 1000, 1000];
+    var colors = ['#ffff00', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white'];
+    var zIndex = [2000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000];
 
     var choice = parseInt(rankings[i]);
     var position = placesObject[choice].geometry.location;
@@ -297,7 +300,7 @@ function addResultsMarkers(rankings, placesObject, travelTimesObject) {
             path: 'M 0,-24 6,-7 24,-7 10,4 15,21 0,11 -15,21 -10,4 -24,-7 -6,-7 z',
             fillColor: colors[i],
             fillOpacity: 1,
-            scale: 1.5/4,
+            scale: 2/4,
             strokeColor: '#bd8d2c',
             strokeWeight: 1
           }
@@ -309,8 +312,57 @@ function addResultsMarkers(rankings, placesObject, travelTimesObject) {
 
   }
 
+  var contentForList = '<div id="content-for-list">'+
+    '<h3 class="info-window-heading">'+ placesObject[choice].name +'</h3> a '+ placesObject[choice].types[0] + '/' + placesObject[choice].types[1] + ' located at ' + placesObject[choice].vicinity + '. it receives ' + placesObject[choice].rating + ' stars from google users and is ' + Math.round(travelTimesObject[0][choice]/60) + ' minutes from you and ' + Math.round(travelTimesObject[1][choice]/60) + ' minutes from your friend.  The total travel time would be blank minutes.' +
+    '</div>'+
+    '</div>';
+
   $(".trigger-list-view").show();
+  populateListSlider(rankings, placesObject, travelTimesObject);
+  // $( "#slide-left" ).append( contentForList );
 }
+
+function populateListSlider(rankings, placesObject, travelTimesObject){
+
+  var masterContentForList = [];
+
+  for(i=0; i<10 && i<placesObject.length; i++){
+
+    var choice = parseInt(rankings[i]);
+    var timeOne = Math.round(travelTimesObject[0][choice]/60);
+    var timeTwo = Math.round(travelTimesObject[1][choice]/60);
+    var total = timeOne+timeTwo;
+    var num = i+1;
+    var contentForList = '<div class="content-for-list">'+
+      '<h3>'+ num + '. ' + placesObject[choice].name +'</h3> a '+ placesObject[choice].types[0] + '/' + placesObject[choice].types[1] + ' located at ' + placesObject[choice].vicinity + '. it receives ' + placesObject[choice].rating + ' stars from google users and is ' + timeOne + ' minutes from you and ' + timeTwo + ' minutes from your friend.  the total travel time would be ' + total + ' minutes.' +
+      '</div>'+
+      '</div>';
+
+    masterContentForList.push(contentForList);
+
+  }
+
+  $( "#slide-left" ).append( masterContentForList );
+}
+
+// for future exploration into adding more into into the list view
+// function populateListSlider(placeIds){
+//   debugger;
+//   var contentForList = []
+
+//   var request = {
+//       placeId: placeIds[0]
+//     };
+
+//   var service = new google.maps.places.PlacesService(map);
+//   service.getDetails(request, function(place, status) {
+//     if (status == google.maps.places.PlacesServiceStatus.OK) {
+//       console.log(place);
+//       debugger;
+//     }
+//   });
+
+// }
 
 
 function initialize() {
