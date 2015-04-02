@@ -8,6 +8,10 @@ var destinationInputTypes = document.getElementsByClassName('destination-type');
 // var dateTime = jQuery('#datetimepicker');
 // $('#datetimepicker').val() = "2015-04-22 21:33:41"
 
+//hacky solution at best, but will do in a pinch
+var resultsMarkersObject = [];
+
+
 
 function setCenterNoGeoloc() {
   var nosupportpos = new google.maps.LatLng(51.512802, -0.091324);                     
@@ -142,7 +146,7 @@ function callback(response, status, originLocationNumber, travelTimes, markers, 
 function getStartPointForPlaceQuery(markers, travelTimes, modesOfTransit, destinationTypes){
   //bisection algorithm to determine approx how long two people traveling towards each other would take to meet
   //probably doesn't need to iterate 10000 times - will look into this later
-  debugger;
+  // debugger;
 
   if(travelTimes[0] > travelTimes[1]){
     var x = travelTimes[0];
@@ -318,6 +322,10 @@ function addResultsMarkers(rankings, placesObject, travelTimesObject) {
           }
     });
 
+    // debugger;
+    //have access to resultsMarker in here?
+    resultsMarkersObject.push(resultsMarker);
+
     google.maps.event.addListener(resultsMarker, 'click', function() {
       this.infowindow.open(map, this);
     });
@@ -330,6 +338,8 @@ function addResultsMarkers(rankings, placesObject, travelTimesObject) {
     '</div>';
 
   $(".trigger-list-view").show();
+  $("#calculate").hide();
+  $("#reset-form-button").show()
   populateListSlider(rankings, placesObject, travelTimesObject);
   // $( "#slide-left" ).append( contentForList );
 }
@@ -485,6 +495,28 @@ function initialize() {
     e.preventDefault();
     console.log('sliide')
       $('#slide-left').toggle('slide', {direction: 'right'}, 2000);
+  });
+
+  $("#reset-form-button").click(function (e) {
+    e.preventDefault();
+    $(".trigger-list-view").hide();
+    $(jQuery('#datetimepicker')).val("");
+    $(locations[0]).val("");
+    $(locations[1]).val("");
+    var destinationTypes = [];
+    markers[0][0].setMap(null);
+    markers[1][0].setMap(null);
+
+    console.log("inside reset form button");
+    console.log(resultsMarkersObject);
+    for(i=0; i < resultsMarkersObject.length; i++){
+      resultsMarkersObject[i].setMap(null);
+    }
+
+    // debugger;
+
+    $("#calculate").show();
+    $("#reset-form-button").hide();
   });
 
   

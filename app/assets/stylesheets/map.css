@@ -78,3 +78,7 @@
 .trigger-list-view{
   display: none;
 }
+
+.reset-form-button{
+  display: none;
+}
