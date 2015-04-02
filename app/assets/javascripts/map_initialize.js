@@ -280,7 +280,9 @@ function addResultsMarkers(rankings, placesObject, travelTimesObject) {
   for(i=0; i<10 && i<placesObject.length; i++){
 
     var colors = ['#ffff00', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white'];
+    var opacity = [1, .9, .8, .7, .6, .5, .4, .3, .2, .1]
     var zIndex = [2000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000];
+    var strokeColor = ['red', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey'];
 
     var choice = parseInt(rankings[i]);
     var position = placesObject[choice].geometry.location;
@@ -308,10 +310,10 @@ function addResultsMarkers(rankings, placesObject, travelTimesObject) {
       icon: {
             // Star
             path: 'M 0,-24 6,-7 24,-7 10,4 15,21 0,11 -15,21 -10,4 -24,-7 -6,-7 z',
-            fillColor: colors[i],
+            fillColor: '#ffff00',
             fillOpacity: 1,
-            scale: 2/4,
-            strokeColor: '#bd8d2c',
+            scale: 2.75/4,
+            strokeColor: strokeColor[i],
             strokeWeight: 1
           }
     });
