@@ -4,7 +4,7 @@
   left:0;
   width:100%;
   height:100%;
-  background-color: #eee;
+  background-color: white;
   z-index: -100;
 }
 
@@ -23,7 +23,8 @@
   border: rgba(255,255,255, 0.7);
   z-index: 110;
   pointer-events: auto; 
-  background:rgba(255,255,255, 0.7);
+  /*background:rgba(255,255,255, 0.7);*/
+  background: rgba(255, 255, 255, 0.85);
 }
 .two-locations-form h2 {
   margin-bottom: 0;
@@ -41,14 +42,13 @@
     float: left;
     height:100%;
     width: 32%;
-    background-color: clear;
     z-index: 100;
     pointer-events: none;
 }
 
 #slide-left {
     /*background-color:#eee;*/
-    background:rgba(255,255,255, 0.7);
+    background:rgba(255,255,255, 0.85);
     /*height: 400px;*/
     height:100%; 
     width:100%;

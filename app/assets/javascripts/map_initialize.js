@@ -40,6 +40,15 @@ function addMarker(map, inputAddress, locationNumber, markers) {
           map: map,
           position: position,
           // icon: 'http://maps.google.com/mapfiles/kml/paddle/wht-circle.png'
+          icon: {
+                // Star
+                path: 'M0-165c-27.618 0-50 21.966-50 49.054C-50-88.849 0 0 0 0s50-88.849 50-115.946C50-143.034 27.605-165 0-165z',
+                fillColor: 'blue',
+                fillOpacity: 1,
+                scale: 1/4,
+                strokeColor: 'white',
+                strokeWeight: 1
+              }
         });
       } else {
         console.log("oh no. you can't geocode that address!");
@@ -133,6 +142,7 @@ function callback(response, status, originLocationNumber, travelTimes, markers, 
 function getStartPointForPlaceQuery(markers, travelTimes, modesOfTransit, destinationTypes){
   //bisection algorithm to determine approx how long two people traveling towards each other would take to meet
   //probably doesn't need to iterate 10000 times - will look into this later
+  debugger;
 
   if(travelTimes[0] > travelTimes[1]){
     var x = travelTimes[0];
@@ -161,7 +171,7 @@ function getStartPointForPlaceQuery(markers, travelTimes, modesOfTransit, destin
     var distOfTotalFromLocationOne = timeToMiddle/y
   }
 
-  var startPointForPlaceQuery = google.maps.geometry.spherical.interpolate(markers[0][0].Lf.Ba, markers[1][0].Lf.Ba, distOfTotalFromLocationOne);
+  var startPointForPlaceQuery = google.maps.geometry.spherical.interpolate(markers[0][0].position, markers[1][0].position, distOfTotalFromLocationOne);
 
   // console.log(startPointForPlaceQuery);
   collectDestinations(startPointForPlaceQuery, markers, modesOfTransit, destinationTypes);
