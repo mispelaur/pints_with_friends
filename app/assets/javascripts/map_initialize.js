@@ -146,7 +146,6 @@ function callback(response, status, originLocationNumber, travelTimes, markers, 
 function getStartPointForPlaceQuery(markers, travelTimes, modesOfTransit, destinationTypes){
   //bisection algorithm to determine approx how long two people traveling towards each other would take to meet
   //probably doesn't need to iterate 10000 times - will look into this later
-  // debugger;
 
   if(travelTimes[0] > travelTimes[1]){
     var x = travelTimes[0];
@@ -186,17 +185,14 @@ function collectDestinations(startPoint, markers, modesOfTransit, destinationTyp
 
   var request = {
     location: startPoint,
-    radius: 1000,
+    radius: 1000, //worth playing around with whether making radius considerably larger improves the restuls match in terms of overall fairness
     types: destinationTypes
   };
   var service = new google.maps.places.PlacesService(map);
   // service.radarSearch(request, function(results, status){
-  //   debugger;
   //   destinationsCallback(results, status, markers);
-
   // })
   service.nearbySearch(request, function(results, status) {
-    // debugger;
     destinationsCallback(results, status, markers, modesOfTransit);
   });
 
@@ -253,7 +249,6 @@ function travelTimesBuilderCallback(response, status, originLocationNumber, plac
 
 function rankPlacesByTravelTimeFairness(travelTimesObject, results){
   // taking the sum of the squares of each place - will take into account both the absolute times and the distribution of times
-  // debugger;
   console.log("Time to rank places by travel-time fairness.")
   var sumSquares = {};
   Object.keys(travelTimesObject[0]).forEach(function(key) {
@@ -271,7 +266,7 @@ function rankPlacesByTravelTimeFairness(travelTimesObject, results){
 
 function addResultsMarkers(rankings, placesObject, travelTimesObject) {
 
-  // for later use
+  // for later use?
   // var placeIds = [];
   // for(i=0; i<10 && i<placesObject.length; i++){
   //   placeIds.push(placesObject[i].id);
@@ -322,7 +317,7 @@ function addResultsMarkers(rankings, placesObject, travelTimesObject) {
           }
     });
 
-    // debugger;
+
     //have access to resultsMarker in here?
     resultsMarkersObject.push(resultsMarker);
 
@@ -363,13 +358,12 @@ function populateListSlider(rankings, placesObject, travelTimesObject){
     masterContentForList.push(contentForList);
 
   }
-
+  $( "#slide-left" ).empty();
   $( "#slide-left" ).append( masterContentForList );
 }
 
 // for future exploration into adding more into into the list view
 // function populateListSlider(placeIds){
-//   debugger;
 //   var contentForList = []
 
 //   var request = {
@@ -380,7 +374,6 @@ function populateListSlider(rankings, placesObject, travelTimesObject){
 //   service.getDetails(request, function(place, status) {
 //     if (status == google.maps.places.PlacesServiceStatus.OK) {
 //       console.log(place);
-//       debugger;
 //     }
 //   });
 
@@ -467,7 +460,6 @@ function initialize() {
         destinationTypes.push(destinationType.id);
       }
     })
-    // debugger;
 
     addMarkerPromise.then(function(result){
       console.log("inside addMarkerPromise");
@@ -476,18 +468,14 @@ function initialize() {
     })
     // console.log(modesOfTransit);
     // console.log(markers);
-    //have access to populate markers and modesOfTransit objets in here, yay!
-    // debugger;
+    //have access to populate markers and modesOfTransit objets in here
 
     // Promise.all([addMarkerPromise]).then(function(result){
-      // debugger;
       // calculateDistances(result, secondargument);
     // })
 
     addMarkerPromise.then(function(result){
-      // debugger;
     })
-    // debugger;
     calculateDistances(markers, modesOfTransit, destinationTypes);
   });
 
@@ -513,10 +501,11 @@ function initialize() {
       resultsMarkersObject[i].setMap(null);
     }
 
-    // debugger;
-
     $("#calculate").show();
     $("#reset-form-button").hide();
+    $('#slide-left').toggle('slide', {direction: 'right'}, 1000);
+    // $( "#slide-left" ).empty();
+
   });
 
   
