@@ -503,7 +503,7 @@ function initialize() {
 
     $("#calculate").show();
     $("#reset-form-button").hide();
-    $('#slide-left').toggle('slide', {direction: 'right'}, 1000);
+    $('#slide-left').hide('slide', {direction: 'right'}, 1000);
     // $( "#slide-left" ).empty();
 
   });
