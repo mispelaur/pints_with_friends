@@ -390,7 +390,7 @@ function initialize() {
 
   map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
-
+  applicationState = {};
   jQuery('#datetimepicker').datetimepicker({
     formatTime:'H:i',
     defaultDate: new Date()
