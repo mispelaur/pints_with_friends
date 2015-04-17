@@ -11,8 +11,6 @@ var destinationInputTypes = document.getElementsByClassName('destination-type');
 //hacky solution at best, but will do in a pinch
 var resultsMarkersObject = [];
 
-
-
 function setCenterNoGeoloc() {
   var nosupportpos = new google.maps.LatLng(51.512802, -0.091324);                     
   map.setCenter(nosupportpos);
@@ -390,7 +388,7 @@ function initialize() {
 
   map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
-  applicationState = {};
+  
   jQuery('#datetimepicker').datetimepicker({
     formatTime:'H:i',
     defaultDate: new Date()
