@@ -493,6 +493,10 @@ function initialize() {
     markers[0][0].setMap(null);
     markers[1][0].setMap(null);
 
+    for(i = 0; i < markers.length; i++){
+        markers[i] = ["placeholder", "placeholder"];
+    };
+
     console.log("inside reset form button");
     console.log(resultsMarkersObject);
     for(i=0; i < resultsMarkersObject.length; i++){
