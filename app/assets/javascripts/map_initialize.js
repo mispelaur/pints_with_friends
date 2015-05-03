@@ -36,6 +36,7 @@ function addMarker(map, inputAddress, locationNumber, markers) {
     // showMarkerFromGeocoderResults
     var geocoder = new google.maps.Geocoder();
     var showMarkerFromGeocoderResults = function(results, status) {
+
       if (status == google.maps.GeocoderStatus.OK) {
         var position = results[0].geometry.location;
         var marker = new google.maps.Marker({
@@ -43,7 +44,7 @@ function addMarker(map, inputAddress, locationNumber, markers) {
           position: position,
           // icon: 'http://maps.google.com/mapfiles/kml/paddle/wht-circle.png'
           icon: {
-                // Star
+
                 path: 'M0-165c-27.618 0-50 21.966-50 49.054C-50-88.849 0 0 0 0s50-88.849 50-115.946C50-143.034 27.605-165 0-165z',
                 fillColor: 'blue',
                 fillOpacity: 1,
@@ -66,7 +67,7 @@ function addMarker(map, inputAddress, locationNumber, markers) {
         if(markers[i][0] === "placeholder"){
           //do nothing, marker doesn't yet exist
         }else{
-          latlngbounds.extend(new google.maps.LatLng(markers[i][0].position.k, markers[i][0].position.D));
+          latlngbounds.extend(new google.maps.LatLng(markers[i][0].position.A, markers[i][0].position.F));
         }
       }
 
