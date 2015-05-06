@@ -67,7 +67,7 @@ function addMarker(map, inputAddress, locationNumber, markers) {
         if(markers[i][0] === "placeholder"){
           //do nothing, marker doesn't yet exist
         }else{
-          latlngbounds.extend(new google.maps.LatLng(markers[i][0].position.A, markers[i][0].position.F));
+          latlngbounds.extend(new google.maps.LatLng(markers[i][0].position.lat(), markers[i][0].position.lng()));
         }
       }
 
